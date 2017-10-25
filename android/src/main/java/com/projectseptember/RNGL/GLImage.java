@@ -70,8 +70,17 @@ public class GLImage {
 
     public void onLoad (final Bitmap source) {
         Matrix matrix = new Matrix();
-        matrix.postScale(1, -1);
-        final Bitmap bitmap = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+        int width, height;
+        width = source.getWidth();
+        height = source.getHeight();
+        final int MAX_TEXTURE_SIZE = 2048;
+        while (width > MAX_TEXTURE_SIZE || height > MAX_TEXTURE_SIZE) {
+          width /= 2;
+          height /= 2;
+        }
+        float scale = ((float) width) / source.getWidth();
+        matrix.postScale(scale, -scale);
+        final Bitmap bitmap = Bitmap.createBitmap(source, 0, 0, width, height, matrix, true);
         bitmap.setHasAlpha(true);
         glExecutor.execute(new Runnable() {
             public void run() {
