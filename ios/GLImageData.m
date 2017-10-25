@@ -34,6 +34,12 @@ GLImageData *EMPTY_PIXELS;
     RCTLogError(@"The image must be loaded in setPixelsWithImage call");
     return nil;
   }
+  const int MAX_TEXTURE_SIZE = 2048;
+  // Make sure texture is of a legal size. 2048 is conservative number that works on most devices.
+  while (width > MAX_TEXTURE_SIZE || height > MAX_TEXTURE_SIZE) {
+    width /= 2;
+    height /= 2;
+  }
   GLubyte* data = malloc(width * height * 4);
   CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
   CGContextRef ctx = CGBitmapContextCreate(data, width, height, 8, width * 4, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
